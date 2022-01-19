@@ -1,7 +1,7 @@
-import { animeSearch } from '../src';
+import { nekoSfw } from '../src';
 
 describe('blah', () => {
   it('works', () => {
-    animeSearch("attack on titan", 1)
+    nekoSfw("wallpaper").then(res => console.log(res))
   });
 });

@@ -5,6 +5,9 @@ import { AnimeType, MangaType } from "./interfaces"
 
 const neko = request.defaults({
   baseUrl: 'https://nekos.life/api/v2/',
+  headers: {
+    'content-type': 'application/json'
+  }
 });
 
 const mal = request.defaults({
@@ -58,6 +61,44 @@ export const mangaSearch = (search: string, maxResults: number | string = "max")
       let results: MangaType[] = res.slice(0, +maxResults);
 
       resolve(results)
+    });
+  });
+};
+
+
+export const nekoNsfw = (category: string) => {
+  if (!category) throw new Error('[Anime.js: no category]');
+  return new Promise((resolve) => {
+    const nsfw = require('./nsfw.json');
+
+    if (!nsfw[category]) throw new Error(`[Anime.js: ${category} is invalid category]`);
+    neko.get(nsfw[category], (error: any, response: any, html: string) => {
+      if(error) return resolve([])
+      resolve(JSON.parse(html))
+    });
+  });
+};
+
+export const nekoSfw = (category: string) => {
+  if (!category) throw new Error('[Anime.js: no category]');
+  return new Promise((resolve) => {
+    const sfw = require('./sfw.json');
+
+    if (!sfw[category]) throw new Error(`[Anime.js: ${category} is invalid category]`);
+    neko.get(sfw[category], (error: any, response: any, html: string) => {
+      if(error) return resolve([])
+      resolve(JSON.parse(html))
+    });
+  });
+};
+
+
+
+export const wallpaper = () => {
+  return new Promise((resolve) => {
+    neko.get('/img/wallpaper', (error: any, response: any, html: string) => {
+      if(error) return resolve([])
+      resolve(JSON.parse(html))
     });
   });
 };
