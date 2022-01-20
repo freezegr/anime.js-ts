@@ -1,7 +1,8 @@
 const { version } = require('../package.json');
+import { AnimeType, MangaType, AnimeList, AnimeListBody } from "./interfaces"
 import request from 'request';
 import cheerio from 'cheerio';
-import { AnimeType, MangaType } from "./interfaces"
+
 
 const neko = request.defaults({
   baseUrl: 'https://nekos.life/api/v2/',
@@ -19,7 +20,7 @@ const malAnimeList = request.defaults({
 });
 
 const malMangaList = request.defaults({
-  baseUrl: `https://myanimelist.net/mangalist/`,
+  baseUrl: `https://myanimelist.net/mangalist/`
 });
 
 const kitsu = request.defaults({
@@ -92,13 +93,35 @@ export const nekoSfw = (category: string) => {
   });
 };
 
-
-
 export const wallpaper = () => {
   return new Promise((resolve) => {
     neko.get('/img/wallpaper', (error: any, response: any, html: string) => {
-      if(error) return resolve([])
-      resolve(JSON.parse(html))
+      if(error) return resolve([]);
+      resolve(JSON.parse(html));
     });
+  });
+};
+
+export const getAnimeList = (username: string) => {
+  if (!username) throw new Error('[Anime.js: no username]');
+  return new Promise((resolve) => {
+    let animes: AnimeList = { watching: [], completed: [], dropped: [], onhold: [], planToWatch: [] };
+    let count: number = 0;
+
+    const getAnimeListLoop = (offset: number = 0) => {
+      malAnimeList.get(`${username}/load.json?offset=${offset}&status=7}`, (error, response, html: string) => {
+        const res: AnimeListBody[] = JSON.parse(html);
+        if (html == '{"errors":[{"message":"invalid request"}]}') return resolve([])
+        animes.watching.push(...res.filter(x => x.status == 1));
+        animes.completed.push(...res.filter(x => x.status == 2));
+        animes.onhold.push(...res.filter(x => x.status == 3));
+        animes.dropped.push(...res.filter(x => x.status == 4));
+        animes.planToWatch.push(...res.filter(x => x.status == 6));
+
+        if(res.length < 300 || res.length == 0) getAnimeListLoop();
+        return resolve(animes)
+      })
+    }
+    getAnimeListLoop();
   });
 };

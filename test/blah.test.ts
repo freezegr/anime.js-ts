@@ -1,7 +1,7 @@
-import { nekoSfw } from '../src';
+import { getAnimeList } from '../src';
 
 describe('blah', () => {
   it('works', () => {
-    nekoSfw("wallpaper").then(res => console.log(res))
+    getAnimeList("freezegr").then(res => console.log("res"))
   });
 });
