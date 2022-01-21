@@ -52,7 +52,8 @@ interface MangaBody extends Attributes {
   mangaType: string;
 }
 
-export interface AnimeType extends AnimeBody {
+//for search ktisu
+export interface KitsuAnimeType extends AnimeBody {
   id: string;
   type: 'anime';
   link: {
@@ -61,16 +62,18 @@ export interface AnimeType extends AnimeBody {
   attributes: AnimeBody;
 }
 
-export interface MangaType extends MangaBody {
+//for search
+export interface KitsuMangaType extends MangaBody {
   id: string;
   type: 'manga';
   link: {
     self: string | null;
   };
-  attributes: AnimeBody;
+  attributes: MangaBody;
 }
 
-export interface AnimeListBody {
+//mal
+export interface MalAnimeListBody {
   status: number;
   score: number;
   is_rewatching: number;
@@ -85,8 +88,8 @@ export interface AnimeListBody {
   has_video: boolean;
   video_url: string;
   genres: {
-    id: number,
-    name: string
+    id: number;
+    name: string;
   }[];
   demographics: {
     id: number;
@@ -101,10 +104,55 @@ export interface AnimeListBody {
   days_string: string | null;
 }
 
-export interface AnimeList {
-  watching: AnimeListBody[];
-  completed: AnimeListBody[];
-  dropped: AnimeListBody[];
-  onhold: AnimeListBody[];
-  planToWatch: AnimeListBody[];
+export interface MalAnimeList {
+  watching: MalAnimeListBody[];
+  completed: MalAnimeListBody[];
+  dropped: MalAnimeListBody[];
+  onhold: MalAnimeListBody[];
+  planToWatch: MalAnimeListBody[];
+}
+
+export interface MalMangaListBody {
+  id: number;
+  status: number;
+  score: number;
+  tags: string;
+  is_rereading: number;
+  num_read_chapters: number;
+  num_read_volumes: number;
+  manga_title: string;
+  manga_english: string;
+  manga_num_chapters: number;
+  manga_num_volumes: number;
+  manga_publishing_status: number;
+  manga_id: number;
+  manga_magazines: null;
+  genres: {
+    id: number;
+    name: string;
+  }[];
+  demographics: {
+    id: number;
+    name: string;
+  }[];
+  title_localized: null;
+  manga_url: string;
+  manga_image_path: string;
+  is_added_to_list: boolean;
+  manga_media_type_string: string;
+  start_date_string: null;
+  finish_date_string: null;
+  manga_start_date_string: string;
+  manga_end_date_string: null;
+  days_string: null;
+  retail_string: null;
+  priority_string: string;
+};
+
+export interface MalMangaList {
+  reading: Array<MalMangaListBody>;
+  completed: MalMangaListBody[];
+  dropped: MalMangaListBody[];
+  onhold: MalMangaListBody[];
+  planToRead: MalMangaListBody[];
 }
